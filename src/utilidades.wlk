@@ -8,3 +8,9 @@ object utilidadesParaJuego {
 	}
 }
 
+object sentido{
+	method arriba(){ return "arriba" }
+	method abajo(){ return "abajo" }
+	method izquierda(){ return "izquierda" }
+	method derecha(){ return "derecha" }
+}

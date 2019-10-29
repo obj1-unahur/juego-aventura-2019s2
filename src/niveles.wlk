@@ -4,6 +4,7 @@ import elementos.*
 import utilidades.*
 
 class Nivel{
+	var personaje = new Personaje()
 	const deposito = new Deposito( limiteInferior = game.at(5,10), limiteSuperior = game.at(9,15))
 	method preparar(){
 		personaje.position(new Position(x = 8, y=10))
@@ -86,4 +87,3 @@ object nivelLlaves inherits Nivel{
 	}
 	
 	
-}

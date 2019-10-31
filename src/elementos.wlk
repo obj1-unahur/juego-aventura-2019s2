@@ -4,11 +4,13 @@ import utilidades.*
 //-------------------------------------------------------------------------//
 
 class ObjetoVisual{
+	var property image = "empty.png"
 	var property position
 	method efectoDeCoalision( personaje ){}
-	method colisiones(){
-		return game.colliders(self)
+	method hide(){
+		image = "Empty.png"
 	}
+	method show()
 }
 
 //-------------------------------------------------------------------------//
@@ -42,7 +44,6 @@ class ObjetoMovil inherits ObjetoVisual{
 //-------------------------------------------------------------------------//
 
 class Personaje inherits ObjetoMovil{
-	const property image = "player.png"
 	var property vida = 100
 	var property llavesRecogidas = 0
 	
@@ -52,8 +53,8 @@ class Personaje inherits ObjetoMovil{
 	method orientacionDeMovimiento(){	
 		return orientacionDeMovimiento
 	}
-	method comer(){
-		vida += 10
+	method comer( unAlimento ){
+		vida += unAlimento.energia()
 	}
 	method tieneHambre(){
 		return ( vida < 10 )
@@ -61,13 +62,16 @@ class Personaje inherits ObjetoMovil{
 	override method mover(direccion){
 		super( direccion )
 		vida -= 1
+	}	
+	override method show(){ 
+		image = "Player.png"
 	}
 }
 
 //-------------------------------------------------------------------------//
 
 class Caja inherits ObjetoMovil{
-	const property image = "Caja.png"
+	var property estaDepositada = false
 	method estaEnElDeposito( deposito ){
 		return
 			(position.x() > deposito.limiteInferior().x()) && 
@@ -79,40 +83,65 @@ class Caja inherits ObjetoMovil{
 	
 	override method efectoDeCoalision( unPersonaje ){
 		self.mover(unPersonaje.orientacionDeMovimiento())
+	}	
+	override method show(){ 
+		image = "Caja.png"
 	}
 }
 
 //-------------------------------------------------------------------------//
 
 class Llave inherits ObjetoVisual{
-	const property image = "Llave.png"
+	var fueRecogida = false
+	override method show(){ 
+		image = "Llave.png"
+	}
 	override method efectoDeCoalision( unPersonaje ){
-		unPersonaje.recogerLlave()
+		if(not fueRecogida){
+			unPersonaje.recogerLlave()
+			fueRecogida = true
+		}
 	}
 }
 
 //-------------------------------------------------------------------------//
 
 class Pollo inherits ObjetoVisual{
-	const property image = "pollo.png"
+	var property energia = 10
+	override method show(){ 
+		image = "Pollo.png"
+	}
 	override method efectoDeCoalision( unPersonaje ){
-		unPersonaje.comer()
+		unPersonaje.comer( self )
+		energia = 0
 	}
 }
 
 //-------------------------------------------------------------------------//
 
 class Puerta inherits ObjetoVisual{
-	const property image = "puerta.png"
+	var estaEscondida = true
 	override method efectoDeCoalision( unNivel ){
 		unNivel.pasarDeNivel()
 	}
-	
+	override method show(){
+		if( estaEscondida ){
+			estaEscondida = false
+			image = "Puerta.png"
+		}
+	}	
 }
 
 //-------------------------------------------------------------------------//
 
 class Deposito{
-	var property limiteInferior = new Position(x = 5 , y = 10)
-	var property limiteSuperior = new Position(x = 9 , y = 15)
+	var property cantidad = 0
+	var property limiteInferior = new Position(x = 4 , y = 8)
+	var property limiteSuperior = new Position(x = 8 , y = 12)
+	method agregar( unaCaja ){
+		if(not unaCaja.estaDepositada()){
+			cantidad += 1
+			unaCaja.estaDepositada( true )
+		}
+	}
 }

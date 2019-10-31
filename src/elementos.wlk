@@ -33,7 +33,7 @@ class ObjetoMovil inherits ObjetoVisual{
 			// Si no se pudo mover en el sentido dado es porque el objeto esta en el borde
 			// Entonces con el fin de que el objeto no se quede clavado en un borde
 			// simulo un "efecto rebote" moviendolo en la direccion contraria
-			self.mover( direccion.inverso())
+			self.mover( sentido.inverso(direccion))
 		}
 		orientacionDeMovimiento = direccion
 	}
@@ -116,4 +116,3 @@ class Deposito{
 	var property limiteInferior = new Position(x = 5 , y = 10)
 	var property limiteSuperior = new Position(x = 9 , y = 15)
 }
-

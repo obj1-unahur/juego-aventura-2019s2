@@ -9,6 +9,8 @@ class Nivel{
 	var personaje = new Personaje()
 	var elementosVisuales = []
 	var puertaDeEscape
+	var nivelAnterior = self
+	var nivelSiguiente = self
 	method preparar(){
 		personaje.position(new Position(x = 8, y=10))
 		game.addVisual( new Fondo( image = "fondoCompleto.png" ) )
@@ -18,8 +20,25 @@ class Nivel{
 		keyboard.right().onPressDo({ personaje.mover(sentido.derecha() ) })
 		keyboard.up().onPressDo({ personaje.mover(sentido.arriba() ) })
 		keyboard.down().onPressDo({ personaje.mover( sentido.abajo()) })
+		
+		if( personaje.tieneHambre() ){
+			game.say( personaje, "tengo poca vida, necesito comer!!!" )
+		}
+		if( personaje.vida() == 0){
+			self.perder()
+		}
 	}
-	method pasarDeNivel()
+	method perder(){
+		game.clear()
+		game.addVisual( new Fondo( image = "perdiste.jpg") )
+		game.schedule(2500, { nivelAnterior.pasarDeNivel() } )
+	}
+	method pasarDeNivel(){
+		nivelSiguiente.nivelAnterior(self)
+		game.clear()
+		game.addVisual(new Fondo(image="fondoCompleto.png"))
+		game.schedule(2500, { game.clear() } )
+	}
 }
 
 //-------------------------------------------------------------------------//
@@ -29,6 +48,7 @@ object nivelBloques inherits Nivel{
 	
 	override method preparar() {
 		super()
+		nivelSiguiente = nivelLlaves
 		self.agregarCajas(5)
 		elementosVisuales.forEach{ caja => 
 			game.addVisual( caja )
@@ -39,11 +59,11 @@ object nivelBloques inherits Nivel{
 					elementosVisuales.remove( caja )
 				}
 				if(elementosVisuales.isEmpty()){
-					game.addVisual( puertaDeEscape = new Puerta( position = utilidadesParaJuego.posicionRandom()) )
-					game.onCollideDo( puertaDeEscape , { puertaDeEscape.efectoDeCoalision(self) } )		
+					game.addVisual( puertaDeEscape = new Puerta( position = utilidadesParaJuego.posicionRandom()))
+					game.onCollideDo( puertaDeEscape, { puertaDeEscape.efectoDeCoalision(self) } )
 				}
 			})
-		}		
+		}
 	}
 	method agregarCajas( cantidad ){
 		if(cantidad > 0){
@@ -52,15 +72,11 @@ object nivelBloques inherits Nivel{
 		}
 	}
 	override method pasarDeNivel() {
-		game.clear()
-		game.addVisual( new Fondo( image = "fondoCompleto.png" ) )
-		game.schedule(2500, {
-			game.clear()
-			game.addVisual(new Fondo( image = "finNivel1.png" ) )
-			game.schedule( 3000, {
+		super()
+		game.addVisual(new Fondo( image = "finNivel1.png" ) )
+		game.schedule( 3000, {
 				game.clear()
-				nivelLlaves.preparar()
-			})
+				nivelSiguiente.preparar()
 		})
 	}
 		
@@ -81,23 +97,19 @@ object nivelLlaves inherits Nivel{
 				elemento.efectoDeColision( personaje )
 				if( personaje.llavesRecogidas() == 3) {
 					game.addVisual( puertaDeEscape = new Puerta( position = utilidadesParaJuego.posicionRandom()) )
-					game.onCollideDo( puertaDeEscape , { puertaDeEscape.efectoDeCoalision(self) } )	7
+					game.onCollideDo( puertaDeEscape , { puertaDeEscape.efectoDeCoalision(self) } )	
 				}
 			})
 		}
-		if( personaje.tieneHambre() ){
-			game.say( personaje, "tengo poca vida, necesito comer!!!" )
-		}
-		if( personaje.vida() == 0){
-			self.perder()
-		}
 	}
+	
 	method agregarLlaves( cantidad ){
 		if(cantidad > 0){
 			elementosVisuales.add( new Llave( position = utilidadesParaJuego.posicionRandom()))
 			self.agregarLlaves(cantidad-1)
 		}
 	}
+	
 	method agregarPollos( cantidad ){
 		if(cantidad > 0){
 			elementosVisuales.add( new Pollo( position = utilidadesParaJuego.posicionRandom()))
@@ -105,21 +117,9 @@ object nivelLlaves inherits Nivel{
 		}
 	}
 	
-	method perder(){
-		game.clear()
-		game.addVisual( new Fondo( image = "perdiste.jpg") )
-		game.schedule(2500, { nivelBloques.pasarDeNivel() } )
-	}
-	
 	override method pasarDeNivel() {
-		game.clear()
-		game.addVisual(new Fondo(image="fondoCompleto.png"))
-		game.schedule(2500, {
-			game.clear()
-			game.addVisual(new Fondo(image="ganamos.png"))
-			game.schedule(3000, {
-				game.stop()
-			})
-		})
+		super()
+		game.addVisual(new Fondo(image="ganamos.png"))
+		game.schedule(3000, { game.stop() } )
 	}	
 }

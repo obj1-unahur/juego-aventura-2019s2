@@ -4,7 +4,9 @@ import utilidades.*
 //-------------------------------------------------------------------------//
 
 class ObjetoVisual{
-	var property image = "empty.png"
+	// estructura para crear un objeto visual, es decir, un objeto que se va a mostrar en el tablero
+	// inicialmente transparente, cada objeto derivado debe definir su propia apariencia (image)
+	var property image = "Empty.png"
 	var property position
 	method efectoDeCoalision( personaje ){}
 	method hide(){
@@ -16,6 +18,7 @@ class ObjetoVisual{
 //-------------------------------------------------------------------------//
 
 class ObjetoMovil inherits ObjetoVisual{
+	// representa un objeto que se puede mover entre los casilleros del tablero
 	var orientacionDeMovimiento = sentido.izquierda()
 	
 	method mover( direccion ){
@@ -44,10 +47,10 @@ class ObjetoMovil inherits ObjetoVisual{
 //-------------------------------------------------------------------------//
 
 class Personaje inherits ObjetoMovil{
-	var property vida = 100
+	var property vida = 10
 	var property llavesRecogidas = 0
 	
-	method recoogerLlave(){
+	method recogerLlave(){
 		llavesRecogidas += 1
 	}
 	method orientacionDeMovimiento(){	
@@ -145,3 +148,4 @@ class Deposito{
 		}
 	}
 }
+	

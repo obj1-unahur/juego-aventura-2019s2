@@ -116,7 +116,7 @@ class Pollo inherits ObjetoVisual{
 	}
 	override method efectoDeCoalision( unPersonaje ){
 		unPersonaje.comer( self )
-		energia = 0
+		position = utilidadesParaJuego.posicionRandom()
 	}
 }
 

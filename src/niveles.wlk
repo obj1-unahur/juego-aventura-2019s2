@@ -116,7 +116,6 @@ object nivelLlaves inherits Nivel{
 					// La condicion especifica que se colisione con el jugador ya que puede haber un pollo y una llave en el mismo casillero por ejemplo
 					// pero el o los elementos solo deben reaccionar cuando pase el jugador por ese lugar 
 					elemento.efectoDeCoalision( personaje )
-					elemento.hide()
 				}
 			})
 		}

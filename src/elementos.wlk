@@ -103,6 +103,7 @@ class Llave inherits ObjetoVisual{
 		if(not fueRecogida){
 			unPersonaje.recogerLlave()
 			fueRecogida = true
+			self.hide()
 		}
 	}
 }

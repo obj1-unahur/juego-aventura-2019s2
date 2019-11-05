@@ -108,7 +108,7 @@ object nivelLlaves inherits Nivel{
 	override method preparar(){
 		super()
 		self.agregarLlaves(3)
-		self.agregarPollos(3)
+		self.agregarPollos(1)
 		elementosVisuales.forEach{ 
 			elemento => game.addVisual( elemento) 
 			game.onCollideDo( elemento, { unPersonje =>
